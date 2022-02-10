@@ -1,0 +1,32 @@
+syntax = "proto3";
+package image;
+option java_package = "com.michael.grpc.image";
+option java_multiple_files = true;
+
+message Metadata{
+  string id = 1;
+  string image_format = 2;
+}
+
+enum UploadStatus {
+  IN_PROGRESS = 0;
+  OK = 1;
+  FAILED = 2;
+  UNKNOWN = 3;
+}
+
+message ImageUploadRequest{
+  oneof payload {
+      Metadata metadata = 1;
+      bytes image = 2;
+  }
+}
+
+message ImageUploadResponse {
+  string id = 1;
+  UploadStatus status = 2;
+}
+
+service ImageService {
+  rpc Upload(stream ImageUploadRequest) returns (stream ImageUploadResponse);
+}
